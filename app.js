@@ -17,7 +17,7 @@ const mongoURI = MONGODB_URI_PROD;
 mongoose
   .connect(mongoURI, { useNewUrlParser: true })
   .then(() => console.log("Mongoose connected"))
-  .catch((err) => console.err("DB connection failed", err));
+  .catch((err) => console.error("DB connection failed", err));
 
 app.listen(5000, () => {
   console.log("server is on 5000");
