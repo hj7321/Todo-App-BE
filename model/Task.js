@@ -3,13 +3,23 @@ const Schema = mongoose.Schema;
 
 const taskSchema = Schema(
   {
-    task: {
+    title: {
       type: String,
       required: true,
     },
+    content: {
+      type: String,
+      required: true,
+    },
+    priority: {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: 3,
+    },
     isComplete: {
       type: Boolean,
-      required: true,
+      default: false,
     },
     author: {
       type: Schema.Types.ObjectId,
@@ -20,6 +30,9 @@ const taskSchema = Schema(
   { timestamps: true }
 );
 
-const Task = mongoose.model("Task", taskSchema);
+// 텍스트 인덱스 추가 (검색용)
+taskSchema.index({ title: "text", content: "text" });
 
+// Task 모델 생성
+const Task = mongoose.model("Task", taskSchema);
 module.exports = Task;
