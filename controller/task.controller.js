@@ -56,17 +56,21 @@ taskController.searchTasks = async (req, res) => {
         .status(400)
         .json({ status: "fail", message: "Required q parameter" });
 
-    // 3) 기본 필터 정의: 텍스트 검색
-    const filter = { $text: { $search: q } };
+    // 3) 기본 필터 정의: 정규 표현식
+    const filter = {
+      $or: [
+        // title 또는 content 둘 중 하나에 검색어가 포함되면 일치
+        { title: { $regex: q, $options: "i" } }, // 'i'는 대소문자 구분 없음
+        { content: { $regex: q, $options: "i" } },
+      ],
+    };
 
     // 4) 조건 추가: mine === true면 내 글만 검색
     if (mine === "true") filter.author = req.userId;
 
     // 5) 쿼리 실행: 조건에 맞는 Task 조회
-    const tasks = await Task.find(filter, {
-      score: { $meta: "textScore" },
-    })
-      .sort({ score: { $meta: "textScore" } })
+    const tasks = await Task.find(filter)
+      .populate("author", "username email")
       .select("-__v");
 
     res.status(200).json({ status: "ok", data: tasks });
