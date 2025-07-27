@@ -35,7 +35,9 @@ taskController.getTasks = async (req, res) => {
 // 3. 내가 작성한 할 일들만 가져오기 (Read)
 taskController.getMyTasks = async (req, res) => {
   try {
-    const myTaskList = await Task.find({ author: req.userId }).select("-__v");
+    const myTaskList = await Task.find({ author: req.userId })
+      .populate("author", "username email")
+      .select("-__v");
     res.status(200).json({ status: "ok", data: myTaskList });
   } catch (err) {
     res.status(400).json({ status: "fail", message: err.message });
