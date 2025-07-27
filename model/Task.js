@@ -30,8 +30,9 @@ const taskSchema = Schema(
   { timestamps: true }
 );
 
-// 텍스트 인덱스 추가 (검색용)
-taskSchema.index({ title: "text", content: "text" });
+// 단일 필드 인덱스 정의 (검색용)
+taskSchema.index({ title: 1 });
+taskSchema.index({ content: 1 });
 
 // Task 모델 생성
 const Task = mongoose.model("Task", taskSchema);
