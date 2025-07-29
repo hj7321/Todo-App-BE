@@ -23,7 +23,7 @@ taskController.createTask = async (req, res) => {
 taskController.getTasks = async (req, res) => {
   try {
     const taskList = await Task.find({})
-      .populate("author", "username email")
+      .populate("author", "name email")
       .lean()
       .select("-__v");
     res.status(200).json({ status: "ok", data: taskList });
@@ -36,7 +36,7 @@ taskController.getTasks = async (req, res) => {
 taskController.getMyTasks = async (req, res) => {
   try {
     const myTaskList = await Task.find({ author: req.userId })
-      .populate("author", "username email")
+      .populate("author", "name email")
       .select("-__v");
     res.status(200).json({ status: "ok", data: myTaskList });
   } catch (err) {
@@ -70,7 +70,7 @@ taskController.searchTasks = async (req, res) => {
 
     // 5) 쿼리 실행: 조건에 맞는 Task 조회
     const tasks = await Task.find(filter)
-      .populate("author", "username email")
+      .populate("author", "name email")
       .select("-__v");
 
     res.status(200).json({ status: "ok", data: tasks });
