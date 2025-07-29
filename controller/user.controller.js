@@ -28,7 +28,7 @@ userController.loginWithEmail = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email }, "-createdAt -updatedAt -__v");
-    if (email) {
+    if (user) {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
         const token = user.generateToken();
